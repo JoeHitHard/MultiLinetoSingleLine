@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Multiline Json to Singleline</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.5.0/darkly/bootstrap.min.css"
+          integrity="sha384-Bo21yfmmZuXwcN/9vKrA5jPUMhr7znVBBeLxT9MA4r2BchhusfJ6+n8TLGUcRAtL" crossorigin="anonymous">
+    <script>
+
+        function updateFields(source, dest, jsonStr) {
+            document.getElementById(source).setAttribute("class", "form-control is-valid");
+            document.getElementById(dest).setAttribute("class", "form-control");
+            document.getElementById(dest).value = jsonStr;
+        }
+
+        function convert(source, dest, replacer, space) {
+            const x = document.getElementById(source);
+            const data = x.value;
+            let jsonObj;
+            try {
+                jsonObj = JSON.parse(data);
+            } catch (e) {
+                alert(e);
+                document.getElementById(source).setAttribute("class", "form-control is-invalid");
+                return;
+            }
+            updateFields(source, dest, JSON.stringify(jsonObj, replacer, space));
+            textChange();
+        }
+
+        function textChange() {
+            const mlTA = document.getElementById('mljson');
+            const slTA = document.getElementById('sljson');
+            if (mlTA.value !== "" && slTA.value !== "") {
+                document.getElementById('mlButton').hidden = false;
+                document.getElementById('mlButton').innerText = "Convert to Single-Line";
+                document.getElementById('slButton').innerText = "Convert to MultiLine";
+                document.getElementById('slButton').hidden = false;
+                return;
+            }
+            if (mlTA.value === "" && slTA.value === "") {
+                document.getElementById('mlButton').hidden = true;
+                document.getElementById('slButton').hidden = true;
+                return;
+            }
+            if (slTA.value !== "") {
+                document.getElementById('mlButton').hidden = true;
+                document.getElementById('slButton').innerText = "Convert to MultiLine";
+                document.getElementById('slButton').hidden = false;
+                return;
+            }
+            if (mlTA.value !== "") {
+                document.getElementById('slButton').hidden = true;
+                document.getElementById('mlButton').innerText = "Convert to Single-Line";
+                document.getElementById('mlButton').hidden = false;
+            }
+
+        }
+
+        textChange()
+    </script>
+</head>
+<body>
+<div style="text-align: center;">
+    <h1>Multiline Json to Singleline</h1>
+    <textarea class="form-control" id="mljson" rows="10" cols="100" placeholder="Multiline Json..."
+              oninput="textChange()" onchange="textChange()"></textarea>
+    <button type="button" class="btn btn-primary" id="mlButton" hidden="hidden"
+            onclick="convert('mljson', 'sljson', '', '')">Convert to
+        Single-Line
+    </button>
+    <button type="button" class="btn btn-primary" id="slButton" hidden="hidden"
+            onclick="convert('sljson', 'mljson', null, '\t')">Convert to
+        MultiLine
+    </button>
+    <textarea class="form-control" id="sljson" rows="10" cols="100" placeholder="Single-Line Json..."
+              oninput="textChange()" onchange="textChange()"></textarea>
+    <script>
+        textChange()
+    </script>
+</div>
+</body>
+</html>
